@@ -118,7 +118,7 @@ li {
 .pulsing{
   animation: pulse 2s infinite;
   height: 40%;
-  width: 400px;
+  width: 250px;
   min-width: 100px;
   transform: scale(1);
 }
