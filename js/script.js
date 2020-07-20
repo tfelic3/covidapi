@@ -1,8 +1,8 @@
 //select coronavirus image for animation
-let covidImg = $('#covid');
+let covidImg = $('.covid');
 
 $(document).ready(function () {
-	$('#covid').addClass('rotate');
+	$(covidImg).addClass('pulsing');
 });
 
 var stateRepository = (function () {
@@ -11,7 +11,14 @@ var stateRepository = (function () {
 	console.log(stateList);
 
 	//List of states and IDs from path IDs
-	let stateDiv = $('path');
+    let stateDiv = $('path');
+
+    
+    
+    //Map hover state
+
+ 
+
 
 	var apiUrl = 'https://covidtracking.com/api/states';
 
@@ -49,7 +56,6 @@ var stateRepository = (function () {
 				return response.json();
 			})
 			.then(function (json) {
-				console.log(json);
 				json.forEach(function (state) {
 					var state = {
 						state: state.state,
@@ -61,14 +67,96 @@ var stateRepository = (function () {
 	}
 
 	function loadDetails(state) {
-		var url = state.cases;
-		return $.ajax(url)
-			.then(function (details) {
-				// Now we add the details to the item
-				state.cases = details.positive;
+		return $.ajax(apiUrl).then(function (details) {
+                // Now we add the details to the item
+               console.log(details);
+                state.cases=Object.values(details.positive);
+                
 			})
-			.catch(function (e) {});
-	}
+			.catch(function (e) {
+                console.log(e);
+            });
+    }
+  
+
+    let stateName;
+    let covidInfoDiv;
+    let stateTitle;
+    var covidParagraph 
+
+
+    $(stateDiv).mouseover(function(){
+        stateName = this.id;
+        this.style.strokeWidth = "2"; 
+        this.style.stroke= "red";
+        return fetch(apiUrl)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (json) {
+            json.forEach(function (state) {
+            if (stateName ===state.state){
+            covidInfoDiv = document.querySelector('.covidInfoDiv');
+            stateTitle = document.querySelector('.state-heading');
+            stateTitle.textContent = state.state;
+           covidParagraph = document.querySelector('.state-cases');
+            covidParagraph.textContent = "Cases: " + state.positive.toLocaleString();
+
+            };
+            });
+        });
+
+    })  
+
+    $(stateDiv).mouseout(function(){
+        stateName = this.id;
+        this.style.strokeWidth = "0.97063118000000004"; 
+        this.style.stroke= "black";
+        stateTitle.textContent =" ";
+        covidParagraph.textContent=" ";
+    })
+
+      
+    function mapColor() {
+		return fetch(apiUrl)
+			.then(function (response) {
+				return response.json();
+			})
+			.then(function (json) {
+				json.forEach(function (state) {
+                    
+                    for(let i =0;i<stateDiv.length;i++){
+                       if(stateDiv[i].id === state.state && state.positive>=400000){
+                         stateDiv[i].style.fill = "rgb(102,0,0)";
+                       } else if (stateDiv[i].id === state.state && state.positive>=300000){
+                        stateDiv[i].style.fill = "rgb(204,0,0)"
+                       } else if (stateDiv[i].id === state.state && state.positive>=100000){
+                        stateDiv[i].style.fill = "rgb(255,0,0)"
+                       } else if(stateDiv[i].id === state.state && state.positive>=50000){
+                        stateDiv[i].style.fill = "rgb(255,51,51)" 
+                       } else if(stateDiv[i].id === state.state && state.positive>=30000){
+                        stateDiv[i].style.fill = "rgb(255,102,102)" 
+                       } else if (stateDiv[i].id === state.state && state.positive>=10000){
+                        stateDiv[i].style.fill = "rgb(255,153,153)"
+                       } else if (stateDiv[i].id === state.state && state.positive>=5000){
+                        stateDiv[i].style.fill = "rgb(255,204,204)"
+                       } else if (stateDiv[i].id === state.state && state.positive<=4999){
+                        stateDiv[i].style.fill = "rgb(255,200,200)"
+                       }
+                            
+                        
+                    }
+                
+
+                    
+
+				});
+			});
+    }
+    
+    mapColor();
+
+
 
 	function showModal(state) {
 		var modalBody = $('.modal-body');
@@ -91,7 +179,8 @@ var stateRepository = (function () {
 		getAll: getAll,
 		loadList: loadList,
 		showModal: showModal,
-		showDetails: showDetails,
+        showDetails: showDetails,
+        mapColor: mapColor,
 		addListItem: addListItem,
 	};
 })();
