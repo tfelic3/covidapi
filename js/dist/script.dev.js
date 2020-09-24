@@ -1,6 +1,7 @@
-//select coronavirus image for animation
-let covidImg = $('.covid');
+'use strict';
 
+//select coronavirus image for animation
+var covidImg = $('.covid');
 $(document).ready(function () {
 	$(covidImg).addClass('pulsing');
 });
@@ -8,16 +9,12 @@ $(document).ready(function () {
 var stateRepository = (function () {
 	// Array for state pulled from API
 	var stateList = [];
-	console.log(stateList);
+	console.log(stateList); //List of states and IDs from path IDs
 
-	//List of states and IDs from path IDs
-	let stateDiv = $('path');
+	var stateDiv = $('path'); //Map hover state
 
-	//Map hover state
-
-	//'https://cors-anywhere.herokuapp.com/https://covidtracking.com/api/states';
-
-	var apiUrl = 'https://covidtracking.com/api/states';
+	var apiUrl =
+		'https://cors-anywhere.herokuapp.com/covidtracking.com/api/states';
 
 	function add(state) {
 		stateList.push(state);
@@ -43,9 +40,7 @@ var stateRepository = (function () {
 		loadDetails(state).then(function () {
 			showModal(state);
 		});
-	}
-
-	//JSON API Fetches state data
+	} //JSON API Fetches state data
 
 	function loadList() {
 		return fetch(apiUrl)
@@ -70,16 +65,15 @@ var stateRepository = (function () {
 				console.log(details);
 				state.cases = Object.values(details.positive);
 			})
-			.catch(function (e) {
+			['catch'](function (e) {
 				console.log(e);
 			});
 	}
 
-	let stateName;
-	let covidInfoDiv;
-	let stateTitle;
+	var stateName;
+	var covidInfoDiv;
+	var stateTitle;
 	var covidParagraph;
-
 	$(stateDiv).mouseover(function () {
 		stateName = this.id;
 		this.style.strokeWidth = '2';
@@ -101,7 +95,6 @@ var stateRepository = (function () {
 				});
 			});
 	});
-
 	$(stateDiv).mouseout(function () {
 		stateName = this.id;
 		this.style.strokeWidth = '0.97063118000000004';
@@ -117,7 +110,7 @@ var stateRepository = (function () {
 			})
 			.then(function (json) {
 				json.forEach(function (state) {
-					for (let i = 0; i < stateDiv.length; i++) {
+					for (var i = 0; i < stateDiv.length; i++) {
 						if (stateDiv[i].id === state.state && state.positive >= 400000) {
 							stateDiv[i].style.fill = 'rgb(102,0,0)';
 						} else if (
@@ -168,11 +161,8 @@ var stateRepository = (function () {
 		var modalTitle = $('.modal-title');
 		modalBody.empty();
 		modalTitle.empty();
-
 		var stateName = $('<h5></h5>').text('State: ' + state.state);
-
 		modalTitle.append(stateName);
-
 		var stateCases = $('<p></p>').text(
 			'Positive Cases: ' + state.cases.toLocaleString()
 		);
