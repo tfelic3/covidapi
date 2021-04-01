@@ -14,7 +14,7 @@ var stateRepository = (function () {
 	var stateDiv = $('path'); //Map hover state
 
 	var apiUrl =
-		'https://cors-anywhere.herokuapp.com/covidtracking.com/api/states';
+		'https://cors-anywhere.herokuapp.com/api.covidtracking.com/v1/states/current.json';
 
 	function add(state) {
 		stateList.push(state);
